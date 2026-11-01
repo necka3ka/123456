@@ -1,0 +1,505 @@
+using System;
+
+struct Point
+{
+    public double X;
+    public double Y;
+
+    public Point(double x, double y)
+    {
+        X = x;
+        Y = y;
+    }
+
+    public void Print()
+    {
+        Console.WriteLine("(" + X + "; " + Y + ")");
+    }
+}
+
+class PointRunner
+{
+    public static void Run()
+    {
+        Console.WriteLine("=== Задание 1. Точка на плоскости ===");
+
+        Point p1 = new Point(0, 0);
+        Point p2 = new Point(3, 4);
+
+        Console.Write("Точка 1: ");
+        p1.Print();
+        Console.Write("Точка 2: ");
+        p2.Print();
+
+        double dx = p2.X - p1.X;
+        double dy = p2.Y - p1.Y;
+        double dist = Math.Sqrt(dx * dx + dy * dy);
+
+        Console.WriteLine("Расстояние между точками: " + dist);
+        Console.WriteLine();
+    }
+}
+
+struct Rectangle
+{
+    public double Width;
+    public double Height;
+
+    public Rectangle(double w, double h)
+    {
+        Width = w;
+        Height = h;
+    }
+
+    public double Area()
+    {
+        return Width * Height;
+    }
+
+    public double Perimeter()
+    {
+        return 2 * (Width + Height);
+    }
+}
+
+class RectangleRunner
+{
+    public static void Run()
+    {
+        Console.WriteLine("=== Задание 2. Прямоугольник ===");
+
+        Rectangle r = new Rectangle(5, 3);
+
+        Console.WriteLine("Ширина: " + r.Width);
+        Console.WriteLine("Высота: " + r.Height);
+        Console.WriteLine("Площадь: " + r.Area());
+        Console.WriteLine("Периметр: " + r.Perimeter());
+        Console.WriteLine();
+    }
+}
+
+struct Book
+{
+    public string Title;
+    public string Author;
+    public int Year;
+
+    public Book(string title, string author, int year)
+    {
+        Title = title;
+        Author = author;
+        Year = year;
+    }
+
+    public void Print()
+    {
+        Console.WriteLine(Title + " — " + Author + " (" + Year + ")");
+    }
+}
+
+class BookRunner
+{
+    public static void Run()
+    {
+        Console.WriteLine("=== Задание 3. Книга ===");
+
+        Book b = new Book("Война и мир", "Л. Н. Толстой", 1869);
+        b.Print();
+        Console.WriteLine();
+    }
+}
+
+struct ComplexNumber
+{
+    public double Real;
+    public double Imag;
+
+    public ComplexNumber(double real, double imag)
+    {
+        Real = real;
+        Imag = imag;
+    }
+
+    public ComplexNumber Add(ComplexNumber other)
+    {
+        return new ComplexNumber(Real + other.Real, Imag + other.Imag);
+    }
+
+    public ComplexNumber Sub(ComplexNumber other)
+    {
+        return new ComplexNumber(Real - other.Real, Imag - other.Imag);
+    }
+
+    public ComplexNumber Mul(ComplexNumber other)
+    {
+        double real = Real * other.Real - Imag * other.Imag;
+        double imag = Real * other.Imag + Imag * other.Real;
+        return new ComplexNumber(real, imag);
+    }
+
+    public void Print()
+    {
+        if (Imag >= 0)
+            Console.WriteLine(Real + " + " + Imag + "i");
+        else
+            Console.WriteLine(Real + " - " + (-Imag) + "i");
+    }
+}
+
+class ComplexRunner
+{
+    public static void Run()
+    {
+        Console.WriteLine("=== Задание 4. Комплексное число ===");
+
+        ComplexNumber a = new ComplexNumber(2, 3);
+        ComplexNumber b = new ComplexNumber(4, -1);
+
+        Console.Write("a = "); a.Print();
+        Console.Write("b = "); b.Print();
+
+        Console.Write("a + b = "); a.Add(b).Print();
+        Console.Write("a - b = "); a.Sub(b).Print();
+        Console.Write("a * b = "); a.Mul(b).Print();
+        Console.WriteLine();
+    }
+}
+
+struct Color
+{
+    public byte R;
+    public byte G;
+    public byte B;
+
+    public Color(byte r, byte g, byte b)
+    {
+        R = r;
+        G = g;
+        B = b;
+    }
+
+    public string ToHex()
+    {
+        return "#" + R.ToString("X2") + G.ToString("X2") + B.ToString("X2");
+    }
+}
+
+class ColorRunner
+{
+    public static void Run()
+    {
+        Console.WriteLine("=== Задание 5. Цвет RGB ===");
+
+        Color c = new Color(255, 128, 0);
+        Console.WriteLine("R=" + c.R + " G=" + c.G + " B=" + c.B);
+        Console.WriteLine("HEX: " + c.ToHex());
+        Console.WriteLine();
+    }
+}
+
+struct SimpleDate
+{
+    public int Day;
+    public int Month;
+    public int Year;
+
+    public SimpleDate(int day, int month, int year)
+    {
+        Day = day;
+        Month = month;
+        Year = year;
+    }
+
+    public bool IsLeapYear()
+    {
+        if (Year % 400 == 0) return true;
+        if (Year % 100 == 0) return false;
+        if (Year % 4 == 0) return true;
+        return false;
+    }
+
+    public void Print()
+    {
+        Console.WriteLine(Day + "." + Month + "." + Year);
+    }
+}
+
+class DateRunner
+{
+    public static void Run()
+    {
+        Console.WriteLine("=== Задание 6. Дата ===");
+
+        SimpleDate d1 = new SimpleDate(29, 2, 2024);
+        SimpleDate d2 = new SimpleDate(29, 2, 1900);
+        SimpleDate d3 = new SimpleDate(1, 1, 2000);
+
+        d1.Print();
+        Console.WriteLine("Високосный? " + d1.IsLeapYear());
+
+        d2.Print();
+        Console.WriteLine("Високосный? " + d2.IsLeapYear());
+
+        d3.Print();
+        Console.WriteLine("Високосный? " + d3.IsLeapYear());
+        Console.WriteLine();
+    }
+}
+
+struct Vector2D
+{
+    public double X;
+    public double Y;
+
+    public Vector2D(double x, double y)
+    {
+        X = x;
+        Y = y;
+    }
+
+    public double Length()
+    {
+        return Math.Sqrt(X * X + Y * Y);
+    }
+
+    public Vector2D Normalize()
+    {
+        double len = Length();
+        if (len == 0)
+        {
+            Console.WriteLine("Нельзя нормализовать нулевой вектор!");
+            return new Vector2D(0, 0);
+        }
+        return new Vector2D(X / len, Y / len);
+    }
+
+    public double Dot(Vector2D other)
+    {
+        return X * other.X + Y * other.Y;
+    }
+
+    public void Print()
+    {
+        Console.WriteLine("(" + X + "; " + Y + ")");
+    }
+}
+
+class Vector2DRunner
+{
+    public static void Run()
+    {
+        Console.WriteLine("=== Задание 7. Вектор в 2D ===");
+
+        Vector2D v1 = new Vector2D(3, 4);
+        Vector2D v2 = new Vector2D(1, 2);
+
+        Console.Write("v1 = "); v1.Print();
+        Console.WriteLine("Длина v1 = " + v1.Length());
+
+        Console.Write("Нормализованный v1 = ");
+        v1.Normalize().Print();
+
+        Console.WriteLine("Скалярное произведение v1·v2 = " + v1.Dot(v2));
+        Console.WriteLine();
+    }
+}
+
+struct Money
+{
+    public long Rubles;
+    public int Kopecks;
+
+    public Money(long rubles, int kopecks)
+    {
+        Rubles = rubles;
+        Kopecks = kopecks;
+        Normalize();
+    }
+
+    private void Normalize()
+    {
+        if (Kopecks >= 100)
+        {
+            Rubles += Kopecks / 100;
+            Kopecks = Kopecks % 100;
+        }
+        else if (Kopecks < 0)
+        {
+            long borrow = (-Kopecks + 99) / 100;
+            Rubles -= borrow;
+            Kopecks += (int)(borrow * 100);
+        }
+    }
+
+    public Money Add(Money other)
+    {
+        return new Money(Rubles + other.Rubles, Kopecks + other.Kopecks);
+    }
+
+    public Money Sub(Money other)
+    {
+        return new Money(Rubles - other.Rubles, Kopecks - other.Kopecks);
+    }
+
+    private long ToKopecks()
+    {
+        return Rubles * 100 + Kopecks;
+    }
+
+    public bool IsGreater(Money other)
+    {
+        return ToKopecks() > other.ToKopecks();
+    }
+
+    public bool IsLess(Money other)
+    {
+        return ToKopecks() < other.ToKopecks();
+    }
+
+    public void Print()
+    {
+        Console.WriteLine(Rubles + " руб. " + Kopecks + " коп.");
+    }
+}
+
+class MoneyRunner
+{
+    public static void Run()
+    {
+        Console.WriteLine("=== Задание 8. Деньги ===");
+
+        Money m1 = new Money(100, 50);
+        Money m2 = new Money(45, 75);
+
+        Console.Write("m1 = "); m1.Print();
+        Console.Write("m2 = "); m2.Print();
+
+        Console.Write("m1 + m2 = "); m1.Add(m2).Print();
+        Console.Write("m1 - m2 = "); m1.Sub(m2).Print();
+
+        Console.WriteLine("m1 > m2 ? " + m1.IsGreater(m2));
+        Console.WriteLine("m1 < m2 ? " + m1.IsLess(m2));
+        Console.WriteLine();
+    }
+}
+
+struct Triangle
+{
+    public Point A;
+    public Point B;
+    public Point C;
+
+    public Triangle(Point a, Point b, Point c)
+    {
+        A = a;
+        B = b;
+        C = c;
+    }
+
+    private double Distance(Point p1, Point p2)
+    {
+        double dx = p2.X - p1.X;
+        double dy = p2.Y - p1.Y;
+        return Math.Sqrt(dx * dx + dy * dy);
+    }
+
+    public double SideAB() { return Distance(A, B); }
+    public double SideBC() { return Distance(B, C); }
+    public double SideCA() { return Distance(C, A); }
+
+    public double Perimeter()
+    {
+        return SideAB() + SideBC() + SideCA();
+    }
+
+    public double Area()
+    {
+        double a = SideAB();
+        double b = SideBC();
+        double c = SideCA();
+        double p = (a + b + c) / 2;
+        return Math.Sqrt(p * (p - a) * (p - b) * (p - c));
+    }
+}
+
+class TriangleRunner
+{
+    public static void Run()
+    {
+        Console.WriteLine("=== Задание 9. Треугольник ===");
+
+        Triangle t = new Triangle(
+            new Point(0, 0),
+            new Point(3, 0),
+            new Point(0, 4)
+        );
+
+        Console.WriteLine("Сторона AB = " + t.SideAB());
+        Console.WriteLine("Сторона BC = " + t.SideBC());
+        Console.WriteLine("Сторона CA = " + t.SideCA());
+        Console.WriteLine("Периметр = " + t.Perimeter());
+        Console.WriteLine("Площадь = " + t.Area());
+        Console.WriteLine();
+    }
+}
+
+struct Point3D
+{
+    public double X;
+    public double Y;
+    public double Z;
+
+    public Point3D(double x, double y, double z)
+    {
+        X = x;
+        Y = y;
+        Z = z;
+    }
+
+    public double DistanceTo(Point3D other)
+    {
+        double dx = other.X - X;
+        double dy = other.Y - Y;
+        double dz = other.Z - Z;
+        return Math.Sqrt(dx * dx + dy * dy + dz * dz);
+    }
+
+    public void Print()
+    {
+        Console.WriteLine("(" + X + "; " + Y + "; " + Z + ")");
+    }
+}
+
+class Point3DRunner
+{
+    public static void Run()
+    {
+        Console.WriteLine("=== Задание 10. 3D-геометрия ===");
+
+        Point3D p1 = new Point3D(0, 0, 0);
+        Point3D p2 = new Point3D(2, 3, 6);
+
+        Console.Write("Точка 1: "); p1.Print();
+        Console.Write("Точка 2: "); p2.Print();
+
+        Console.WriteLine("Расстояние: " + p1.DistanceTo(p2));
+        Console.WriteLine();
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        PointRunner.Run();
+        RectangleRunner.Run();
+        BookRunner.Run();
+        ComplexRunner.Run();
+        ColorRunner.Run();
+        DateRunner.Run();
+        Vector2DRunner.Run();
+        MoneyRunner.Run();
+        TriangleRunner.Run();
+        Point3DRunner.Run();
+    }
+}
