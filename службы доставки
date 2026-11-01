@@ -1,0 +1,90 @@
+using System;
+
+namespace DeliveryService
+{
+    public abstract class Delivery
+    {
+        protected string name;
+        protected decimal price;
+
+        public string Name
+        {
+            get { return name; }
+            set { name = value; }
+        }
+
+        public decimal Price
+        {
+            get { return price; }
+        }
+
+        public abstract void CalculatePrice(decimal basePrice);
+
+        public override string ToString()
+        {
+            return $"Доставка: {name}, стоимость: {price:C}";
+        }
+    }
+
+    public class StandardDelivery : Delivery
+    {
+        public StandardDelivery(string name)
+        {
+            this.name = name;
+        }
+
+        public override void CalculatePrice(decimal basePrice)
+        {
+            price = basePrice * 1.0m;
+        }
+    }
+
+    public class ExpressDelivery : Delivery
+    {
+        public ExpressDelivery(string name)
+        {
+            this.name = name;
+        }
+
+        public override void CalculatePrice(decimal basePrice)
+        {
+            price = basePrice * 2.5m;
+        }
+    }
+
+    public class InternationalDelivery : Delivery
+    {
+        public InternationalDelivery(string name)
+        {
+            this.name = name;
+        }
+
+        public override void CalculatePrice(decimal basePrice)
+        {
+            price = basePrice * 4.0m;
+        }
+    }
+
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            decimal basePrice = 20m;
+
+            Delivery standard = new StandardDelivery("Стандартная доставка");
+            Delivery express = new ExpressDelivery("Экспресс-доставка");
+            Delivery international = new InternationalDelivery("Международная доставка");
+
+            Delivery[] deliveries = { standard, express, international };
+
+            foreach (Delivery delivery in deliveries)
+            {
+                delivery.CalculatePrice(basePrice);
+                Console.WriteLine(delivery.ToString());
+            }
+
+            Console.WriteLine("\nНажмите любую клавишу для выхода...");
+            Console.ReadKey();
+        }
+    }
+}
