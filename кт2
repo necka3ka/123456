@@ -1,0 +1,224 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace CinemaBookingSystem
+{
+    class Movie
+    {
+        public string Title { get; set; }
+        public int Duration { get; set; }
+
+        public Movie(string title, int duration)
+        {
+            Title = title;
+            Duration = duration;
+        }
+
+        public override string ToString() => $"«{Title}» ({Duration} мин.)";
+    }
+
+    class Seat
+    {
+        public int Number { get; }
+        public bool IsReserved { get; private set; }
+
+        public Seat(int number) => Number = number;
+
+        public bool Reserve()
+        {
+            if (IsReserved)
+            {
+                Console.WriteLine($" Место №{Number} уже занято!");
+                return false;
+            }
+            IsReserved = true;
+            return true;
+        }
+
+        public void Cancel() => IsReserved = false;
+
+        public override string ToString() => IsReserved ? $"[{Number:D2}:X]" : $"[{Number:D2}: ]";
+    }
+
+    class Reservation
+    {
+        public Movie Movie { get; }
+        public Seat Seat { get; }
+
+        public Reservation(Movie movie, Seat seat)
+        {
+            Movie = movie;
+            Seat = seat;
+        }
+
+        public override string ToString() => $"{Movie.Title}, место №{Seat.Number}";
+    }
+
+    class Customer
+    {
+        public string Name { get; }
+        public List<Reservation> Reservations { get; } = new List<Reservation>();
+
+        public Customer(string name) => Name = name;
+    }
+
+    class CinemaHall
+    {
+        private readonly List<Seat> _seats;
+
+        public CinemaHall(int count)
+        {
+            _seats = Enumerable.Range(1, count).Select(n => new Seat(n)).ToList();
+        }
+
+        public Seat GetSeat(int number) => _seats.FirstOrDefault(s => s.Number == number);
+
+        public void ShowSeats()
+        {
+            Console.WriteLine("  " + string.Join(" ", _seats));
+        }
+
+        public void ShowStats()
+        {
+            var free = _seats.Where(s => !s.IsReserved).Select(s => s.Number);
+            var busy = _seats.Where(s => s.IsReserved).Select(s => s.Number);
+            Console.WriteLine("  Свободно: " + (free.Any() ? string.Join(", ", free) : "нет"));
+            Console.WriteLine("  Занято:   " + (busy.Any() ? string.Join(", ", busy) : "нет"));
+        }
+    }
+
+    class BookingService
+    {
+        private readonly CinemaHall _hall;
+        private readonly List<Movie> _movies;
+
+        public BookingService(CinemaHall hall, List<Movie> movies)
+        {
+            _hall = hall;
+            _movies = movies;
+        }
+
+        public void ShowMovies()
+        {
+            for (int i = 0; i < _movies.Count; i++)
+                Console.WriteLine($"  {i + 1}. {_movies[i]}");
+        }
+
+        public Movie GetMovie(int index) =>
+            index >= 0 && index < _movies.Count ? _movies[index] : null;
+
+        public void Book(Customer customer, Movie movie, int seatNumber)
+        {
+            var seat = _hall.GetSeat(seatNumber);
+            if (seat == null)
+            {
+                Console.WriteLine($"  ✗ Место №{seatNumber} не найдено!");
+                return;
+            }
+            if (seat.Reserve())
+            {
+                customer.Reservations.Add(new Reservation(movie, seat));
+                Console.WriteLine($"Место №{seat.Number} забронировано на «{movie.Title}».");
+            }
+        }
+
+        public void Cancel(Customer customer, int seatNumber)
+        {
+            var res = customer.Reservations.FirstOrDefault(r => r.Seat.Number == seatNumber);
+            if (res == null)
+            {
+                Console.WriteLine($"Брони на место №{seatNumber} нет.");
+                return;
+            }
+            res.Seat.Cancel();
+            customer.Reservations.Remove(res);
+            Console.WriteLine($"Бронь на место №{seatNumber} отменена.");
+        }
+    }
+
+    class Program
+    {
+        static void Main()
+        {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+            var movies = new List<Movie>
+            {
+                new Movie("Интерстеллар", 169),
+                new Movie("Начало", 148),
+                new Movie("Матрица", 136)
+            };
+
+            var hall = new CinemaHall(10);
+            var service = new BookingService(hall, movies);
+
+            Console.Write("Ваше имя: ");
+            var name = Console.ReadLine();
+            var customer = new Customer(string.IsNullOrWhiteSpace(name) ? "Гость" : name);
+
+            bool run = true;
+            while (run)
+            {
+                Console.WriteLine("\n1-Фильмы  2-Зал  3-Бронь  4-Мои брони  5-Отмена  0-Выход");
+                Console.Write("Выбор: ");
+                var c = Console.ReadLine();
+
+                switch (c)
+                {
+                    case "1":
+                        service.ShowMovies();
+                        break;
+
+                    case "2":
+                        hall.ShowSeats();
+                        hall.ShowStats();
+                        break;
+
+                    case "3":
+                        service.ShowMovies();
+                        Console.Write("Фильм №: ");
+                        if (!int.TryParse(Console.ReadLine(), out int mi)) { Console.WriteLine("  ✗ Ошибка ввода"); break; }
+                        var movie = service.GetMovie(mi - 1);
+                        if (movie == null) { Console.WriteLine("  ✗ Нет такого фильма"); break; }
+
+                        hall.ShowSeats();
+                        Console.Write("Место №: ");
+                        if (!int.TryParse(Console.ReadLine(), out int sn)) { Console.WriteLine("  ✗ Ошибка ввода"); break; }
+
+                        service.Book(customer, movie, sn);
+                        break;
+
+                    case "4":
+                        if (customer.Reservations.Count == 0)
+                            Console.WriteLine("  Броней нет.");
+                        else
+                            customer.Reservations.ForEach(r => Console.WriteLine("  • " + r));
+                        break;
+
+                    case "5":
+                        if (customer.Reservations.Count == 0) { Console.WriteLine("  Броней нет."); break; }
+                        customer.Reservations.ForEach(r => Console.WriteLine("  • " + r));
+                        Console.Write("Место для отмены №: ");
+                        if (int.TryParse(Console.ReadLine(), out int cs))
+                            service.Cancel(customer, cs);
+                        else
+                            Console.WriteLine("  ✗ Ошибка ввода");
+                        break;
+
+                    case "0":
+                        run = false;
+                        break;
+
+                    default:
+                        Console.WriteLine("  ✗ Неверный пункт");
+                        break;
+                }
+            }
+
+            Console.WriteLine("\n=== Итоговая схема зала ===");
+            hall.ShowSeats();
+            hall.ShowStats();
+        }
+    }
+}
