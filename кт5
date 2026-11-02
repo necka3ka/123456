@@ -1,0 +1,52 @@
+using System;
+
+class Box<T>
+{
+    T item;
+
+    public void Put(T item)
+    {
+        this.item = item;
+    }
+
+    public T Get()
+    {
+        return item;
+    }
+}
+
+class Utils
+{
+    public static void Swap<T>(ref T a, ref T b)
+    {
+        T temp = a;
+        a = b;
+        b = temp;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        Box<int> box1 = new Box<int>();
+        box1.Put(42);
+        Console.WriteLine("Число в коробке: " + box1.Get());
+
+        Box<string> box2 = new Box<string>();
+        box2.Put("Hello");
+        Console.WriteLine("Строка в коробке: " + box2.Get());
+
+        int a = 5;
+        int b = 10;
+        Utils.Swap(ref a, ref b);
+        Console.WriteLine("Числа после Swap: " + a + ", " + b);
+
+        string s1 = "Hello";
+        string s2 = "World";
+        Utils.Swap(ref s1, ref s2);
+        Console.WriteLine("Строки после Swap: " + s1 + ", " + s2);
+
+        Console.ReadLine();
+    }
+}
